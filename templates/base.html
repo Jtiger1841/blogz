@@ -2,13 +2,22 @@
 <html>
     <head>
         <title>{{title}}</title>
+        <style type="text/css">
+            .error {
+                color: red;
+            }
+        </style>
     </head>
 <body>
 
-        <a href='/blog'><p style="display: inline">Main Blog Page</p></a>
+        <a href='/'><p style="display: inline"> Home </p></a>
+        <a href='/blog'><p style="display: inline"> Blogs </p></a>
         <a href='/newpost'><p style="display: inline">Add a Blog Entry</p></a>
+        <a href='/login'><p style="display: inline">Login</p></a>
+        <a href='/signup'><p style="display:inline">Register</p></a>
+        <a href='/logout'><p style="display: inline"> Logout </p></a>
 
-        <h1>Build-a-Blog!</h1>
+        <h1>Blogz</h1>
 
     {% block content %}
     {% endblock %}
