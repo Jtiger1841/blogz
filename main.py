@@ -20,7 +20,7 @@ class User(db.Model):
         self.password = password
 
     def __repr__(self):
-        return '<User %r>' % self.email
+        return '<User %r>' % self.username
 
 class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True) 
@@ -68,12 +68,10 @@ def new_blog():
             c_error = "Error! Invalid Value"     
         
         if (not t_error) and (not c_error): 
-            user_id = request.args.get("user")
-            user = User.query.get(user_id)
             blogz = Blog(blog, content, owner)
             db.session.add(blogz)
             db.session.commit()
-            return render_template("display.html", title=blog, body=content, user=user)
+            return render_template("display.html", title=blog, body=content, user=owner)
         else:
             return render_template("todos.html", error1=t_error, error2=c_error)
 
