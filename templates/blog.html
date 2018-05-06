@@ -4,7 +4,7 @@
     {% if blogs|length == 0 %}
         <p>No Blogs yet</p>
     {% else %}
-        <h2>Blog Listings</h2>
+        <h2>Blog Posts</h2>
         {% for blog in blogs %}
             <a href="./blog?id={{blog.id}}" ><h1>{{blog.title}} </h1></a> 
             <p>{{blog.body}}</p>

@@ -68,10 +68,12 @@ def new_blog():
             c_error = "Error! Invalid Value"     
         
         if (not t_error) and (not c_error): 
+            user_id = request.args.get("user")
+            user = User.query.get(user_id)
             blogz = Blog(blog, content, owner)
             db.session.add(blogz)
             db.session.commit()
-            return render_template("display.html", title=blog, body=content)
+            return render_template("display.html", title=blog, body=content, user=user)
         else:
             return render_template("todos.html", error1=t_error, error2=c_error)
 
@@ -95,8 +97,16 @@ def blog():
         blogs = Blog.query.filter_by(owner=user).all()
         return render_template("blog.html", blogs=blogs)
     else:
-        blogs = Blog.query.all()
-        return render_template("blog.html", blogs=blogs)    
+        id = request.args.get("id")
+        if not id:
+            blogs = Blog.query.all()
+            return render_template("blog.html", blogs=blogs)
+        else:
+            blog = Blog.query.get(id)
+            return render_template("display.html", title=blog.title, body=blog.body)
+        
+    
+    
 
 
 @app.route('/login', methods=["POST", "GET"])
@@ -109,8 +119,8 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
         if user and user.password == password:
-            db.session.add(username)
-            db.commit()
+            db.session.add(user)
+            db.session.commit()
             return redirect('/newpost')
         elif user and user.password != password:
             pass_error = "Invalid Password"
