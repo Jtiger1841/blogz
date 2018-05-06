@@ -6,7 +6,7 @@ app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:1234@localhost:8889/blogz'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
-app.secret_key = "yks9837xkj6d#$#"
+app.secret_key = "vks9837xkj6d#$@"
 
 
 class User(db.Model):
@@ -64,7 +64,7 @@ def new_blog():
             t_error = "Please enter a title"
             
 
-        if content < 1:
+        if len(content) < 1:
             c_error = "Error! Invalid Value"     
         
         if (not t_error) and (not c_error): 
@@ -86,7 +86,9 @@ def blog():
     if request.args.get("id"):
         blog_id = request.args.get("id")
         blog = Blog.query.get(blog_id)
-        return render_template("blog.html", blogs=blog)
+        blogs =[]
+        blogs.append(blog)
+        return render_template("blog.html", blogs=blogs)
     elif request.args.get("user"):
         user_id = request.args.get("user")
         user = User.query.get(user_id)
@@ -147,7 +149,7 @@ def signup():
             existing_user = User.query.filter_by(username=username).first()
             if existing_user:
                 user_error="Error! Username Already Exist"
-                return render_template("signup.html", error1=user_error)
+                return render_template("signup.html", title="Register", error1=user_error)
             else:
                 new_user = User(username,password)
                 db.session.add(new_user)
@@ -156,8 +158,8 @@ def signup():
                 return redirect('/newpost')    
 
         else:    
-            return render_template('signup.html',  error1=U_error, error2=pass_error, error3=vrfy_error )  
-    return render_template("signup.html")       
+            return render_template('signup.html', title="Register", error1=U_error, error2=pass_error, error3=vrfy_error )  
+    return render_template("signup.html", title="Register")       
         
 
         
