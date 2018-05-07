@@ -39,7 +39,7 @@ class Blog(db.Model):
 
 @app.before_request
 def require_login():
-   allowed_routes = ['login', 'signup', 'list_blogs', 'index']
+   allowed_routes = ['login', 'signup', 'blog', 'index']
    if request.endpoint not in allowed_routes and 'username' not in session:
        return redirect('/login')
 
@@ -71,7 +71,7 @@ def new_blog():
             blogz = Blog(blog, content, owner)
             db.session.add(blogz)
             db.session.commit()
-            return render_template("display.html", title=blog, body=content, user=owner)
+            return render_template("display.html", title=blog, body=content,)
         else:
             return render_template("todos.html", error1=t_error, error2=c_error)
 
@@ -93,7 +93,7 @@ def blog():
         user_id = request.args.get("user")
         user = User.query.get(user_id)
         blogs = Blog.query.filter_by(owner=user).all()
-        return render_template("blog.html", blogs=blogs)
+        return render_template("blog.html", blogs=blogs, user=user)
     else:
         id = request.args.get("id")
         if not id:
@@ -102,7 +102,8 @@ def blog():
         else:
             blog = Blog.query.get(id)
             return render_template("display.html", title=blog.title, body=blog.body)
-        
+
+    
     
     
 
@@ -117,8 +118,7 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
         if user and user.password == password:
-            db.session.add(user)
-            db.session.commit()
+            session['username'] = username
             return redirect('/newpost')
         elif user and user.password != password:
             pass_error = "Invalid Password"
