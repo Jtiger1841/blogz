@@ -32,7 +32,7 @@ class Blog(db.Model):
     def __init__(self,title,body,owner):
         self.title = title
         self.body = body
-        self.owner = owner
+        self.owner_id = owner
     
     def __repr__(self):
         return '<User %r>' % self.title
@@ -59,6 +59,7 @@ def new_blog():
         blog = request.form['title']
         content = request.form['content']
         owner = User.query.filter_by(username=session['username']).first()
+        print(owner)
 
         if len(blog) < 1:
             t_error = "Please enter a title"
@@ -68,10 +69,10 @@ def new_blog():
             c_error = "Error! Invalid Value"     
         
         if (not t_error) and (not c_error): 
-            blogz = Blog(blog, content, owner)
+            blogz = Blog(blog, content, owner.id)
             db.session.add(blogz)
             db.session.commit()
-            return render_template("display.html", title=blog, body=content,)
+            return render_template("display.html", blog=blogz)
         else:
             return render_template("todos.html", error1=t_error, error2=c_error)
 
@@ -101,7 +102,7 @@ def blog():
             return render_template("blog.html", blogs=blogs)
         else:
             blog = Blog.query.get(id)
-            return render_template("display.html", title=blog.title, body=blog.body)
+            return render_template("display.html", title=blog.title, body=blog.body, )
 
     
     
